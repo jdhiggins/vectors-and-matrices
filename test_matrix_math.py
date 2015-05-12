@@ -17,14 +17,16 @@ u = [1, 1, 1]
 y = [10, 20, 30]
 z = [0, 0, 0]
 
+q = [[1, 3, 0], [0, 2, 4]]
 
 def test_shape_vectors():
     """shape should take a vector or matrix and return a tuple with the
     number of rows (for a vector) or the number of rows and columns
     (for a matrix.)"""
-    assert shape(m) == (2,)
-    assert shape(v) == (3,)
-    assert shape([1]) == (1,)
+    assert shape_vectors(m) == (2,)
+    assert shape_vectors(v) == (3,)
+    assert shape_vectors([1]) == (1,)
+    assert shape_vectors(q) == (3, 2)
 
 
 def test_vector_add():
@@ -93,7 +95,6 @@ def test_dot_checks_shapes():
     """Shape rule: the vectors must be the same size."""
     dot(v, m)
 
-
 def test_vector_multiply():
     """
     [a b]  *  Z     = [a*Z b*Z]
@@ -102,7 +103,6 @@ def test_vector_multiply():
     """
     assert vector_multiply(v, 0.5) == [0.5, 1.5, 0]
     assert vector_multiply(m, 2) == [6, 8]
-
 
 def test_vector_mean():
     """
@@ -146,9 +146,9 @@ def test_shape_matrices():
     """shape should take a vector or matrix and return a tuple with the
     number of rows (for a vector) or the number of rows and columns
     (for a matrix.)"""
-    assert shape(A) == (3, 3)
-    assert shape(C) == (3, 2)
-    assert shape(D) == (2, 3)
+    assert shape_matrices(A) == (3, 3)
+    assert shape_matrices(C) == (3, 2)
+    assert shape_matrices(D) == (2, 3)
 
 
 def test_matrix_row():
@@ -218,7 +218,7 @@ def test_matrix_matrix_multiply():
 
     Matrix * Matrix = Matrix
     """
-    assert matrix_matrix_multiply(A, B) == A
+    assert matrix_matrix_multiply(A, B) == B
     assert matrix_matrix_multiply(B, C) == [[8, 10],
                                             [20, 25],
                                             [32, 40]]

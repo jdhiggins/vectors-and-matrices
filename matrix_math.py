@@ -159,6 +159,7 @@ def matrix_vector_multiply_checks_shapes(matrix, vector):
     if (shape_matrices(matrix))[0] != shape_vectors(vector):
         raise ShapeException
 
+test_A = [[1, 2], [3, 4]]
 
 def matrix_matrix_multiply(matrix1, matrix2):
     """
@@ -169,14 +170,31 @@ def matrix_matrix_multiply(matrix1, matrix2):
     Matrix * Matrix = Matrix
     """
     matrix_matrix_multiply_checks_shapes(matrix1, matrix2)
-    return [(dot((matrix_row(matrix1, i)), (matrix_col(matrix2, i))), \
-            dot((matrix_row(matrix1, i)), (matrix_col(matrix2, (i+1))))) \
-            for i in range(len(matrix1))]
+    mult_matrix = [matrix_col(matrix2, i) for i in range(len(matrix2[0]))]
+    row_len = len(mult_matrix)
+    list1 = [dot((matrix1[i]), (mult_matrix[j])) for i in range(len(matrix1)) for \
+            j in range(len(mult_matrix))]
+    return [list1[i:i + row_len] for i in range(0, len(list1), row_len)]
+    # return [dot(matrix_row(matrix1, i), matrix_col(matrix2, i)) for i in \
+    #         range(len(matrix1))]
+
+#a_matrix = [matrix_col(test_A, i) for i in range(len(test_A[0]))]
+#print(a_matrix)
+#matrix1 = [[1, 2, 3], [3, 4, 5]]
+#list1 = ([dot((matrix1[i]), (a_matrix[j])) for i in range(len(matrix1)) for \
+#        j in range(len(a_matrix))])
+#row_len = len(matrix1)
+#final_matrix = [list1[i:i + len(matrix1[0])] for i in range(0, len(matrix1), row_len)]
+#print(final_matrix)
+    #return [(dot((matrix_row(matrix1, i)), (matrix_col(matrix2, i))), \
+    #        dot((matrix_row(matrix1, i)), (matrix_col(matrix2, (i+1))))) \
+    #        for i in range(len(matrix1))]
+    #
     # return [matrix_vector_multiply(matrix2, matrix1[i]) for i in \
     #         range(len(matrix1))]
 
 def matrix_matrix_multiply_checks_shapes(matrix1, matrix2):
     """Shape Rule: The number of columns of the first matrix must equal the
     number of rows of the second matrix."""
-    if shape_matrices(matrix1)[0] != shape_matrices(matrix2)[1]:
+    if len(matrix1[0]) != len(matrix2):
         raise ShapeException
