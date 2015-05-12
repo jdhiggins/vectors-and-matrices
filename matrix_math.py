@@ -27,11 +27,13 @@ def vector_sub(vector1, vector2):
 
     Matrix + Matrix = Matrix
     """
+    vector_sub_checks_shapes(vector1, vector2)
     return [vector1[i] - vector2[i] for i in range(len(vector1))]
 
 
 def vector_sum(*vectors):
     """vector_sum can take any number of vectors and add them together."""
+    vector_sum_checks_shapes(vectors)
     sum = vectors[0]
     for vec in vectors[1:]:
         sum = vector_add(sum, vec)
@@ -44,6 +46,7 @@ def dot(vector1, vector2):
 
     dot(Vector, Vector) = Scalar
     """
+    dot_checks_shapes(vector1, vector2)
     return sum([vector1[i] * vector2[i] for i in range(len(vector1))])
 
 
@@ -66,6 +69,26 @@ def vector_mean(*vectors):
 
 
 def vector_add_checks_shapes(vector1, vector2):
+    """Shape rule: the vectors must be the same size."""
+    if shape_vectors(vector1) != shape_vectors(vector2):
+        raise ShapeException
+
+
+def vector_sub_checks_shapes(vector1, vector2):
+    """Shape rule: the vectors must be the same size."""
+    if shape_vectors(vector1) != shape_vectors(vector2):
+        raise ShapeException
+
+
+def vector_sum_checks_shapes(*vectors):
+    """Shape rule: the vectors must be the same size."""
+    test_shape = shape_vectors(vectors[0])
+    for vec in vectors:
+        if test_shape != shape_vectors(vec):
+            raise ShapeException
+
+
+def dot_checks_shapes(vector1, vector2):
     """Shape rule: the vectors must be the same size."""
     if shape_vectors(vector1) != shape_vectors(vector2):
         raise ShapeException
@@ -127,7 +150,14 @@ def matrix_vector_multiply(matrix, vector):
 
     Matrix * Vector = Vector
     """
+    matrix_vector_multiply_checks_shapes(matrix, vector)
     return [dot(matrix[i], vector) for i in range(len(matrix))]
+
+def matrix_vector_multiply_checks_shapes(matrix, vector):
+    """Shape Rule: The number of rows of the vector must equal the number of
+    columns of the matrix."""
+    if (shape_matrices(matrix))[0] != shape_vectors(vector):
+        raise ShapeException
 
 
 def matrix_matrix_multiply(matrix1, matrix2):
@@ -138,5 +168,15 @@ def matrix_matrix_multiply(matrix1, matrix2):
 
     Matrix * Matrix = Matrix
     """
-    return [matrix_vector_multiply(matrix2, matrix1[i]) for i in \
-            range(len(matrix1))]
+    matrix_matrix_multiply_checks_shapes(matrix1, matrix2)
+    return [(dot((matrix_row(matrix1, i)), (matrix_col(matrix2, i))), \
+            dot((matrix_row(matrix1, i)), (matrix_col(matrix2, (i+1))))) \
+            for i in range(len(matrix1))]
+    # return [matrix_vector_multiply(matrix2, matrix1[i]) for i in \
+    #         range(len(matrix1))]
+
+def matrix_matrix_multiply_checks_shapes(matrix1, matrix2):
+    """Shape Rule: The number of columns of the first matrix must equal the
+    number of rows of the second matrix."""
+    if shape_matrices(matrix1)[0] != shape_matrices(matrix2)[1]:
+        raise ShapeException
